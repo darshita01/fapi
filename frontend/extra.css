@@ -1,0 +1,81 @@
+.main {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-rows: auto;
+  row-gap: 5px;
+  background-color: rgb(250, 249, 248);
+  border: 2px solid #a2a3a3;
+  border-radius: 12px;
+}
+.add {
+  margin-left: 1%;
+  background-color: rgb(90, 150, 55);
+  border-radius: 5px;
+  padding: 5px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+button {
+  color: antiquewhite;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
+}
+
+/* .users{
+  margin-left: 1%;
+  /* display: flex; 
+/* }  */
+/* .showbtn,
+.editbtn,
+.deletebtn {
+  /* display: grid; */
+  /* width: 7%;
+  margin-right: 2%;
+} */ 
+/* .showbtn button{
+  background-color: rgb(43, 26, 100);
+  border-radius: 5px;
+  size: 3%;
+  /* width: 4%; */
+
+/* .editbtn button{
+  background-color: rgb(26, 201, 224);
+  border-radius: 5px;
+  /* width:4% */
+/* }
+.deletebtn button{
+  background-color: rgb(238, 76, 65);
+  border-radius: 5px; */
+/* width: 4%; */
+div {
+  /* display: flex; */
+  /* width: 100%; */
+  align-items: center;
+  /* margin: 0.1%; */
+}
+.address {
+  background-color: #0a090a;
+  text-align: center;
+  color: aliceblue;
+}
+#rowdiv {
+  border-top: 1px solid rgb(158, 165, 165);
+  padding-top: 20px;
+}
+#header {
+  display: grid;
+  grid-template-columns: 7% 63% 30%;
+  margin-left: 1%;
+  /* widows: 30% 30% 30%; */
+}
+#Submit,
+#Post,
+#close {
+  color: #0a090a;
+  border: 1px solid rgb(126, 123, 123);
+}
