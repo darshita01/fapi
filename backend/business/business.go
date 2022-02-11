@@ -7,17 +7,17 @@ import (
 )
 
 
-type HttpHandlers struct {
+type UserBusiness struct {
 	db *sql.DB
 }
 
-func New (db *sql.DB) HttpHandlers {
-	return HttpHandlers{
+func New (db *sql.DB) UserBusiness {
+	return UserBusiness{
 		db: db,
 	}
 }
 
-func (h HttpHandlers) EnterUserData (fName, lName, mName string) JsonResponse {
+func (h UserBusiness) EnterUserData (fName, lName, mName string) JsonResponse {
 	
 
 	var response = JsonResponse{}
@@ -38,7 +38,7 @@ func (h HttpHandlers) EnterUserData (fName, lName, mName string) JsonResponse {
 	return response
 }
 
-func (h HttpHandlers) GetUserData (params map[string]string) (JsonResponse) {
+func (h UserBusiness) GetUserData (params map[string]string) (JsonResponse) {
 	additionalFunc.PrintMessage("Getting data...")
 	
 	id := params["id"]
@@ -79,7 +79,7 @@ func (h HttpHandlers) GetUserData (params map[string]string) (JsonResponse) {
 	return response
 }
 
-func (h HttpHandlers) EditUserData(fName, lName, mName string, params map[string]string) JsonResponse{
+func (h UserBusiness) EditUserData(fName, lName, mName string, params map[string]string) JsonResponse{
 	additionalFunc.PrintMessage("Editing data...")
 	
 	id := params["id"]
@@ -111,7 +111,7 @@ func (h HttpHandlers) EditUserData(fName, lName, mName string, params map[string
 	return response
 }
 
-func (h HttpHandlers) DeleteUserData (params map[string]string) (JsonResponse){
+func (h UserBusiness) DeleteUserData (params map[string]string) (JsonResponse){
 	id := params["id"]
 
 	response := JsonResponse{}

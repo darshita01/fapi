@@ -2,7 +2,7 @@
   <div class="main">
     <div class="tableName">
       <h3>&nbsp; List of Users</h3>
-      <button class="btn btn-primary btn-sm" @click="addUser()">Add</button>
+      <button class="btn btn-primary btn-sm" id="add" @click="addUser()">Add</button>
     </div>
     <div class="container-fluid">
       <div class="row" id="header">
@@ -34,7 +34,6 @@
         <button id="close" @click="closeAddDiv()">Close</button>
       </div>
     </div>
-    <div v-if="isDelClicked">{{ msg }}</div>
     <form v-if="isEditClicked || isAddClicked">
       <div>
         <label>First Name:</label>
@@ -53,7 +52,7 @@
           v-if="isformbtn"
           type="submit"
           id="Post"
-          @click="editdata($event)"
+          @click="checkValidity($event)"
         >
           Edit
         </button>
@@ -61,7 +60,7 @@
           v-if="!isformbtn"
           type="submit"
           id="Post"
-          @click="editdata($event)"
+          @click="checkValidity($event)"
         >
           Add
         </button>
@@ -79,7 +78,6 @@ export default {
       isBtnClicked: false,
       isEditClicked: false,
       isAddClicked: false,
-      isDelClicked: false,
       fname: "",
       lname: "",
       mname: "",
@@ -123,8 +121,7 @@ export default {
         });
       this.isBtnClicked = false;
     },
-    async editdata(event) {
-      event.preventDefault();
+    async editdata() {
       this.bodyFormData = new FormData();
 
       this.bodyFormData.append("F_name", this.fname);
@@ -146,7 +143,7 @@ export default {
             console.log(err);
           });
         this.isEditClicked = false;
-      } else {
+      } else if(this.isAddClicked){
         await this.axios({
           method: "post",
           url: "http://localhost:8000/Users/",
@@ -181,7 +178,6 @@ export default {
       this.mname = "";
     },
     async deleteUser(i) {
-      this.isDelClicked = true;
       await this.axios
         .delete("http://localhost:8000/Users/" + i.id)
         .then((res) => {
@@ -191,12 +187,31 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+        alert(this.msg)
 
       this.getUsers();
     },
     closeAddDiv() {
       document.getElementById("address").innerHTML = "";
     },
+    checkValidity(event){
+      event.preventDefault()
+      let x = /[0-9]/
+      let y = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/
+
+      if(this.fname == "" || this.lname == "" || this.mname == ""){
+        alert("Fill all the field.")
+        return false
+      }else if(x.test(this.fname) || x.test(this.lname) || x.test(this.mname)){
+        alert("Numeric value or numbers in between are not allowed for these field.")
+        return false
+      }else if(y.test(this.fname) || y.test(this.lname) || y.test(this.mname)){
+        alert("Special characters are not allowed.")
+        return false
+      } else {
+        this.editdata()
+      }
+    }
   },
   components: {},
 };
@@ -206,7 +221,7 @@ export default {
 .row {
   margin: 1%;
   padding-top: 1%;
-  border-top: 0.5px solid #a2a3a3;
+  border-top: 0.5px solid #d9dbdb;
 }
 .btn {
   margin-left: 1%;
@@ -221,8 +236,14 @@ export default {
   width: 90%;
   margin: auto;
   margin-top: 2%;
-  background-color: rgb(250, 249, 248);
-  border: 2px solid #a2a3a3;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e6e6;
+  border-radius: 2px;
+  box-shadow: 5px 5px #f1f1f1;
+}
+#add{
+  background-color: #8d8a8a;
+  border: #8d8a8a;
+  padding: 0% 5%;
 }
 </style>
