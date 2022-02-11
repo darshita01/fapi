@@ -10,10 +10,10 @@ import (
 )
 
 type user struct {
-	user business.HttpHandlers
+	user business.UserBusiness
 }
 
-func New(u business.HttpHandlers) user{
+func New(u business.UserBusiness) user{
 	return user{
 		user : u,
 	}
