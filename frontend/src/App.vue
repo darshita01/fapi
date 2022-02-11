@@ -221,7 +221,7 @@ export default {
 .row {
   margin: 1%;
   padding-top: 1%;
-  border-top: 0.5px solid #a2a3a3;
+  border-top: 0.5px solid #d9dbdb;
 }
 .btn {
   margin-left: 1%;
@@ -236,12 +236,14 @@ export default {
   width: 90%;
   margin: auto;
   margin-top: 2%;
-  background-color: rgb(250, 249, 248);
-  border: 2px solid #a2a3a3;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e6e6;
+  border-radius: 2px;
+  box-shadow: 5px 5px #f1f1f1;
 }
 #add{
-  background-color: #050505;
+  background-color: #8d8a8a;
+  border: #8d8a8a;
   padding: 0% 5%;
 }
 </style>
