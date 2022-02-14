@@ -11,8 +11,6 @@ type UserBusiness struct {
 	db *sql.DB
 }
 
-// CHANGED
-// CHANGED AGAIN !!!
 func New (db *sql.DB) UserBusiness {
 	return UserBusiness{
 		db: db,
