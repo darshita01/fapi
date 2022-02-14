@@ -2,7 +2,9 @@
   <div class="main">
     <div class="tableName">
       <h5>&nbsp; List of Users</h5>
-      <button class="btn btn-primary btn-sm" id="add" @click="addUser()">Add</button>
+      <button class="btn btn-primary btn-sm" id="add" @click="addUser()">
+        Add
+      </button>
     </div>
     <div class="container-fluid">
       <div class="row" id="header">
@@ -16,7 +18,7 @@
         </div>
         <div class="col-sm-7">{{ i.fname }} {{ i.mname }} {{ i.lname }}</div>
         <div class="col-sm-4" style="align-content: center">
-          <button class="btn btn-success btn-sm" @click="getUser(i),j=i">
+          <button class="btn btn-success btn-sm" @click="getUser(i), (j = i)">
             Show
           </button>
           <button class="btn btn-primary btn-sm" @click="editUser(i)">
@@ -26,22 +28,23 @@
             Delete
           </button>
         </div>
-        <div id="address" v-if="showbtn & i===j">
-      <div v-for="i in address" :key="i">
-        id : {{i.id}}<br>
-        HouseNo : {{i.houseNo}}
+        <div id="address" v-if="showbtn & (i === j)">
+          <div class="cardgroup">
+          <div v-for="i in address" :key="i" class="card">
+            <div class = "addressHeader">Address id : {{ i.id }}</div>
+            <div class = "addressText" >{{ i.houseNo }}, {{i.streetName}}, {{i.state}}, {{i.country}}, {{i.pincode}} </div>
+          </div>
+          </div>
+          <button id="close" @click="closeAddDiv()">Close</button>
+        </div>
       </div>
-      <button id="close" @click="closeAddDiv()">Close</button>
     </div>
 
-      </div>
-    </div>
-    
     <form class="form" v-if="isEditClicked || isAddClicked">
       <div>
         <label>First Name:</label> &nbsp;&thinsp;&thinsp;
         <input v-model="fname" id="fname" name="F_name" type="text" />
-      </div><br>
+      </div>
       <div>
         <label>Last Name:</label>&nbsp;&thinsp;&thinsp;&thinsp;&thinsp;
         <input v-model="lname" id="lname" name="L_name" type="text" />
@@ -111,16 +114,16 @@ export default {
       this.axios
         .get("http://localhost:8000/Users/" + i.id)
         .then((res) => {
-          var address = res.data.Address;
-          console.log(address);
-          this.isBtnClicked = true;
-          this.address = address;
-          console.log(this.address);
+          this.address = res.data.Address;
+          this.showbtn = true;
+          if(this.address.length === 0){
+            this.showbtn = false
+            alert("Address for this user is not available")
+          }
         })
         .catch((err) => {
           console.log(err);
         });
-        this.showbtn = true
     },
     async editdata() {
       this.bodyFormData = new FormData();
@@ -144,7 +147,7 @@ export default {
             console.log(err);
           });
         this.isEditClicked = false;
-      } else if(this.isAddClicked){
+      } else if (this.isAddClicked) {
         await this.axios({
           method: "post",
           url: "http://localhost:8000/Users/",
@@ -188,31 +191,41 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-        alert(this.msg)
+      alert(this.msg);
 
       this.getUsers();
     },
     closeAddDiv() {
-      this.showbtn = false
+      this.showbtn = false;
     },
-    checkValidity(event){
-      event.preventDefault()
-      let x = /[0-9]/
-      let y = /[A-Za-z]/
+    checkValidity(event) {
+      event.preventDefault();
+      let x = /[0-9]/;
+      let y = /[^a-zA-Z]+/;
 
-      if(this.fname == "" || this.lname == "" || this.mname == ""){
-        alert("Fill all the field.")
-        return false
-      }else if(x.test(this.fname) || x.test(this.lname) || x.test(this.mname)){
-        alert("Numeric value or numbers in between are not allowed for these field.")
-        return false
-      }else if(y.test(this.fname) && y.test(this.lname) && y.test(this.mname)){
-        alert("Special characters are not allowed.")
-        return false
+      if (this.fname == "" || this.lname == "" || this.mname == "") {
+        alert("Fill all the field.");
+        return false;
+      } else if (
+        x.test(this.fname) ||
+        x.test(this.lname) ||
+        x.test(this.mname)
+      ) {
+        alert(
+          "Numeric value or numbers in between are not allowed for these field."
+        );
+        return false;
+      } else if (
+        y.test(this.fname) ||
+        y.test(this.lname) ||
+        y.test(this.mname)
+      ) {
+        alert("Special characters are not allowed.");
+        return false;
       } else {
-        this.editdata()
+        this.editdata();
       }
-    }
+    },
   },
   components: {},
 };
@@ -242,24 +255,44 @@ export default {
   border-radius: 2px;
   box-shadow: 5px 5px #f1f1f1;
 }
-#add{
+#add {
   background-color: #031155;
   border: #8d8a8a;
   padding: 0% 5%;
   margin-left: 0%;
 }
-.form{
+.form {
   display: grid;
   width: 25%;
   font-size: medium;
   margin-bottom: 20px;
-  /* border: 1px dashed #595959; */
   padding: 10px;
   line-height: 25px;
 }
-button{
+button {
   background-color: #031155;
   border: #8d8a8a;
   color: aliceblue;
+}
+input{
+  margin: 5px;
+}
+.addressHeader {
+  border: 1px solid rgb(224, 224, 224);
+  padding: 5px;
+  background-color: rgb(243, 243, 243);
+}
+.card{
+  display: flex;
+  margin: 10px;
+  border: 1px solid rgb(172, 168, 168);
+  width: 10%;
+}
+
+.addressText {
+  padding: 5px;
+}
+.cardgroup{
+  display: flex;
 }
 </style>
