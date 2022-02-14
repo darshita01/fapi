@@ -1,14 +1,14 @@
 <template>
   <div class="main">
     <div class="tableName">
-      <h3>&nbsp; List of Users</h3>
+      <h5>&nbsp; List of Users</h5>
       <button class="btn btn-primary btn-sm" id="add" @click="addUser()">Add</button>
     </div>
     <div class="container-fluid">
       <div class="row" id="header">
-        <div class="col-sm-1"><h4>Id</h4></div>
-        <div class="col-sm-7"><h4>Name</h4></div>
-        <div class="col-sm-4"><h4>Actions</h4></div>
+        <div class="col-sm-1"><h6>Id</h6></div>
+        <div class="col-sm-7"><h6>Name</h6></div>
+        <div class="col-sm-4"><h6>Actions</h6></div>
       </div>
       <div class="row" v-for="(i, index) in record" :key="index">
         <div class="col-sm-1">
@@ -16,7 +16,7 @@
         </div>
         <div class="col-sm-7">{{ i.fname }} {{ i.mname }} {{ i.lname }}</div>
         <div class="col-sm-4" style="align-content: center">
-          <button class="btn btn-success btn-sm" @click="getUser(i)">
+          <button class="btn btn-success btn-sm" @click="getUser(i),j=i">
             Show
           </button>
           <button class="btn btn-primary btn-sm" @click="editUser(i)">
@@ -26,21 +26,24 @@
             Delete
           </button>
         </div>
+        <div id="address" v-if="showbtn & i===j">
+      <div v-for="i in address" :key="i">
+        id : {{i.id}}<br>
+        HouseNo : {{i.houseNo}}
+      </div>
+      <button id="close" @click="closeAddDiv()">Close</button>
+    </div>
+
       </div>
     </div>
-    <div id="address" v-if="isBtnClicked">
+    
+    <form class="form" v-if="isEditClicked || isAddClicked">
       <div>
-        {{ address }}
-        <button id="close" @click="closeAddDiv()">Close</button>
-      </div>
-    </div>
-    <form v-if="isEditClicked || isAddClicked">
-      <div>
-        <label>First Name:</label>
+        <label>First Name:</label> &nbsp;&thinsp;&thinsp;
         <input v-model="fname" id="fname" name="F_name" type="text" />
-      </div>
+      </div><br>
       <div>
-        <label>Last Name:</label>
+        <label>Last Name:</label>&nbsp;&thinsp;&thinsp;&thinsp;&thinsp;
         <input v-model="lname" id="lname" name="L_name" type="text" />
       </div>
       <div>
@@ -75,7 +78,6 @@ export default {
     return {
       record: "",
       address: null,
-      isBtnClicked: false,
       isEditClicked: false,
       isAddClicked: false,
       fname: "",
@@ -83,10 +85,8 @@ export default {
       mname: "",
       id: "",
       isformbtn: false,
+      showbtn: false,
       msg: "",
-      // "user1",
-      // "user2",
-      // "u
     };
   },
   mounted() {
@@ -111,15 +111,16 @@ export default {
       this.axios
         .get("http://localhost:8000/Users/" + i.id)
         .then((res) => {
-          var address = [res.data.Address];
+          var address = res.data.Address;
           console.log(address);
           this.isBtnClicked = true;
           this.address = address;
+          console.log(this.address);
         })
         .catch((err) => {
           console.log(err);
         });
-      this.isBtnClicked = false;
+        this.showbtn = true
     },
     async editdata() {
       this.bodyFormData = new FormData();
@@ -192,12 +193,12 @@ export default {
       this.getUsers();
     },
     closeAddDiv() {
-      document.getElementById("address").innerHTML = "";
+      this.showbtn = false
     },
     checkValidity(event){
       event.preventDefault()
       let x = /[0-9]/
-      let y = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/
+      let y = /[A-Za-z]/
 
       if(this.fname == "" || this.lname == "" || this.mname == ""){
         alert("Fill all the field.")
@@ -205,7 +206,7 @@ export default {
       }else if(x.test(this.fname) || x.test(this.lname) || x.test(this.mname)){
         alert("Numeric value or numbers in between are not allowed for these field.")
         return false
-      }else if(y.test(this.fname) || y.test(this.lname) || y.test(this.mname)){
+      }else if(y.test(this.fname) && y.test(this.lname) && y.test(this.mname)){
         alert("Special characters are not allowed.")
         return false
       } else {
@@ -242,8 +243,23 @@ export default {
   box-shadow: 5px 5px #f1f1f1;
 }
 #add{
-  background-color: #8d8a8a;
+  background-color: #031155;
   border: #8d8a8a;
   padding: 0% 5%;
+  margin-left: 0%;
+}
+.form{
+  display: grid;
+  width: 25%;
+  font-size: medium;
+  margin-bottom: 20px;
+  /* border: 1px dashed #595959; */
+  padding: 10px;
+  line-height: 25px;
+}
+button{
+  background-color: #031155;
+  border: #8d8a8a;
+  color: aliceblue;
 }
 </style>
