@@ -139,11 +139,9 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
           .then(function (response) {
-            //handle success
             console.log(response);
           })
           .catch(function (err) {
-            //handle error
             console.log(err);
           });
         this.isEditClicked = false;
@@ -155,7 +153,6 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
           .then(function (response) {
-            //handle success
             console.log(response);
           })
           .catch(function (err) {
@@ -260,6 +257,9 @@ export default {
   border: #8d8a8a;
   padding: 0% 5%;
   margin-left: 0%;
+}
+#header{
+  color:#8d8a8a;
 }
 .form {
   display: grid;
