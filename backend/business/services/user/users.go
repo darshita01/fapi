@@ -50,7 +50,7 @@ func (h Userstruct) GetUserData (id string) (JsonResponse) {
 	
 	for rows3.Next(){
 		rows3.Scan(&id1, &f_name, &l_name, &m_name)
-	data1 = append(data1, User{Id: id1, User_fname: f_name, User_lname: l_name, User_mname: m_name})
+	data1 = append(data1, User{Id: id1, UserFname: f_name, UserLname: l_name, UserMname: m_name})
 	}
 	if len(data1)==0{
 		response := JsonResponse{Type: "failure", Message: "Id is not in the table"}
@@ -75,7 +75,7 @@ func (h Userstruct) EnterUserData (fName, lName, mName string) JsonResponse {
 		err := h.db.QueryRow("INSERT INTO users(\"F_name\", \"L_name\", \"M_name\") VALUES($1,$2,$3) returning id;", fName, lName, mName).Scan(&lastInsertID)
 		additionalFunc.CheckErr(err)
 		data1 := []User{}
-		data1 = append(data1, User{Id: lastInsertID, User_fname: fName, User_lname: lName, User_mname: mName})
+		data1 = append(data1, User{Id: lastInsertID, UserFname: fName, UserLname: lName, UserMname: mName})
 		response = JsonResponse{Type: "success", Data: data1, Message: "Data inserted in User table"}
 	}
 	return response
@@ -108,7 +108,7 @@ func (h Userstruct) EditUserData(fName, lName, mName string, id string) JsonResp
 		return response
 	}
 	data1 := []User{}
-	data1 = append(data1, User{Id: id1, User_fname: f_name, User_lname: l_name, User_mname: m_name})
+	data1 = append(data1, User{Id: id1, UserFname: f_name, UserLname: l_name, UserMname: m_name})
 
 	response := JsonResponse{Type: "success", Data: data1, Message: "Data edited in User table"}
 	return response
@@ -119,7 +119,11 @@ func (h Userstruct) DeleteUserData (id string) (JsonResponse){
 	response := JsonResponse{}
 	var id1 int
     err := h.db.QueryRow("SELECT id FROM users WHERE id = $1",id).Scan(&id1)
-	additionalFunc.CheckErr(err)
+	error:= additionalFunc.CheckErr(err)
+	if error != nil{
+		response = JsonResponse{Type: "failure", Message: error.Error()}
+		return response
+	}
 	if id1 == 0 {
 		response = JsonResponse{Type: "failure", Message: "id is not in the table"}
 		return response

@@ -2,9 +2,9 @@ package user
 
 type User struct {
 	Id         int    `json:"id"`
-	User_fname string `json:"fname"`
-	User_lname string `json:"lname"`
-	User_mname string `json:"mname"`
+	UserFname string `json:"fname"`
+	UserLname string `json:"lname"`
+	UserMname string `json:"mname"`
 }
 type JsonResponse struct {
 	Type    string `json:"type"`
