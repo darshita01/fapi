@@ -30,7 +30,7 @@
         </div>
         <div id="address" v-if="showbtn & (i === j)">
           <div class="cardgroup">
-          <div v-for="i in address" :key="i" class="card">
+          <div v-for="(i,index) in address" :key="index" class="card">
             <div class = "addressHeader">Address id : {{ i.id }}</div>
             <div class = "addressText" >{{ i.houseNo }}, {{i.streetName}}, {{i.state}}, {{i.country}}, {{i.pincode}} </div>
           </div>
@@ -90,6 +90,7 @@ export default {
       isformbtn: false,
       showbtn: false,
       msg: "",
+      j: null ,
     };
   },
   mounted() {
@@ -99,7 +100,7 @@ export default {
   methods: {
     getUsers() {
       this.axios
-        .get("http://localhost:8000/Users/")
+        .get("http://localhost:8004/Users/")
         .then((res) => {
           this.record = res.data.data;
           console.log(res);
@@ -112,7 +113,7 @@ export default {
 
     getUser(i) {
       this.axios
-        .get("http://localhost:8000/Users/" + i.id)
+        .get("http://localhost:8004/Users/" + i.id)
         .then((res) => {
           this.address = res.data.Address;
           this.showbtn = true;
@@ -134,7 +135,7 @@ export default {
       if (this.isEditClicked) {
         await this.axios({
           method: "put",
-          url: "http://localhost:8000/Users/" + this.id.id,
+          url: "http://localhost:8004/Users/" + this.id.id,
           data: this.bodyFormData,
           headers: { "Content-Type": "multipart/form-data" },
         })
@@ -148,7 +149,7 @@ export default {
       } else if (this.isAddClicked) {
         await this.axios({
           method: "post",
-          url: "http://localhost:8000/Users/",
+          url: "http://localhost:8004/Users/",
           data: this.bodyFormData,
           headers: { "Content-Type": "multipart/form-data" },
         })
@@ -180,7 +181,7 @@ export default {
     },
     async deleteUser(i) {
       await this.axios
-        .delete("http://localhost:8000/Users/" + i.id)
+        .delete("http://localhost:8004/Users/" + i.id)
         .then((res) => {
           this.msg = res.data.message;
           console.log(res);
