@@ -122,17 +122,6 @@ export default {
         
         return response.data.Address
           
-          // this.address = res.data.Address;
-          // this.showbtn = true;
-          // if (this.address.length === 0) {
-          //   this.showbtn = false;
-          //   alert("Address for this user is not available");
-          // }
-        // })
-        // .catch((err) => {
-        //   console.log(err);
-        //   throw new Error(err);
-        // });
     },
     async editdata() {
       this.bodyFormData = new FormData();
