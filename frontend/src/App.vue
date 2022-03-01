@@ -18,7 +18,10 @@
         </div>
         <div class="col-sm-7">{{ i.fname }} {{ i.mname }} {{ i.lname }}</div>
         <div class="col-sm-4" style="align-content: center">
-          <button class="btn btn-success btn-sm" @click="getUser(i), (j = i)">
+          <button
+            class="btn btn-success btn-sm"
+            @click="onShowSection(i)"
+          >
             Show
           </button>
           <button class="btn btn-primary btn-sm" @click="editUser(i)">
@@ -28,14 +31,16 @@
             Delete
           </button>
         </div>
-        <div id="address" v-if="showbtn & (i === j)">
+        <div v-if="openSections.indexOf(i.id) !== -1">
           <div class="cardgroup">
-          <div v-for="(i,index) in address" :key="index" class="card">
-            <div class = "addressHeader">Address id : {{ i.id }}</div>
-            <div class = "addressText" >{{ i.houseNo }}, {{i.streetName}}, {{i.state}}, {{i.country}}, {{i.pincode}} </div>
+            <div v-for="(i, index) in i.address" :key="index" class="card">
+              <div class="addressHeader">Address id : {{ i.id }}</div>
+              <div class="addressText">
+                {{ i.houseNo }}, {{ i.streetName }}, {{ i.state }},
+                {{ i.country }}, {{ i.pincode }}
+              </div>
+            </div>
           </div>
-          </div>
-          <button id="close" @click="closeAddDiv()">Close</button>
         </div>
       </div>
     </div>
@@ -90,7 +95,8 @@ export default {
       isformbtn: false,
       showbtn: false,
       msg: "",
-      j: null ,
+      j: null,
+      openSections: [],
     };
   },
   mounted() {
@@ -100,7 +106,7 @@ export default {
   methods: {
     getUsers() {
       this.axios
-        .get("http://localhost:8004/Users/")
+        .get("http://localhost:8000/Users/")
         .then((res) => {
           this.record = res.data.data;
           console.log(res);
@@ -111,20 +117,22 @@ export default {
       console.log(this.fname);
     },
 
-    getUser(i) {
-      this.axios
-        .get("http://localhost:8004/Users/" + i.id)
-        .then((res) => {
-          this.address = res.data.Address;
-          this.showbtn = true;
-          if(this.address.length === 0){
-            this.showbtn = false
-            alert("Address for this user is not available")
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async getUser(i) {
+      const response =  await this.axios.get("http://localhost:8000/Users/" + i.id)
+        
+        return response.data.Address
+          
+          // this.address = res.data.Address;
+          // this.showbtn = true;
+          // if (this.address.length === 0) {
+          //   this.showbtn = false;
+          //   alert("Address for this user is not available");
+          // }
+        // })
+        // .catch((err) => {
+        //   console.log(err);
+        //   throw new Error(err);
+        // });
     },
     async editdata() {
       this.bodyFormData = new FormData();
@@ -135,7 +143,7 @@ export default {
       if (this.isEditClicked) {
         await this.axios({
           method: "put",
-          url: "http://localhost:8004/Users/" + this.id.id,
+          url: "http://localhost:8000/Users/" + this.id.id,
           data: this.bodyFormData,
           headers: { "Content-Type": "multipart/form-data" },
         })
@@ -149,7 +157,7 @@ export default {
       } else if (this.isAddClicked) {
         await this.axios({
           method: "post",
-          url: "http://localhost:8004/Users/",
+          url: "http://localhost:8000/Users/",
           data: this.bodyFormData,
           headers: { "Content-Type": "multipart/form-data" },
         })
@@ -181,7 +189,7 @@ export default {
     },
     async deleteUser(i) {
       await this.axios
-        .delete("http://localhost:8004/Users/" + i.id)
+        .delete("http://localhost:8000/Users/" + i.id)
         .then((res) => {
           this.msg = res.data.message;
           console.log(res);
@@ -224,6 +232,26 @@ export default {
         this.editdata();
       }
     },
+
+    async onShowSection(userInfo) {
+      if(!userInfo.address) {
+        try {
+          userInfo.address = await this.getUser(userInfo)
+        }catch(error) {
+          console.log(error)
+        }
+      }
+      if(this.openSections.indexOf(userInfo.id) !== -1){
+        this.openSections = this.openSections.filter(id => id !== userInfo.id)
+      }else if(userInfo.address.length === 0){
+        alert("address is not available")
+      }
+      else {
+        this.openSections = [...this.openSections, userInfo.id]
+      }
+      
+
+    },
   },
   components: {},
 };
@@ -259,8 +287,8 @@ export default {
   padding: 0% 5%;
   margin-left: 0%;
 }
-#header{
-  color:#8d8a8a;
+#header {
+  color: #8d8a8a;
 }
 .form {
   display: grid;
@@ -275,7 +303,7 @@ button {
   border: #8d8a8a;
   color: aliceblue;
 }
-input{
+input {
   margin: 5px;
 }
 .addressHeader {
@@ -283,7 +311,7 @@ input{
   padding: 5px;
   background-color: rgb(243, 243, 243);
 }
-.card{
+.card {
   display: flex;
   margin: 10px;
   border: 1px solid rgb(172, 168, 168);
@@ -293,7 +321,7 @@ input{
 .addressText {
   padding: 5px;
 }
-.cardgroup{
+.cardgroup {
   display: flex;
 }
 </style>
