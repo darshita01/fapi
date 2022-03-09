@@ -2,9 +2,9 @@ package database
 
 import (
 	"backend/additionalFunc"
-	"database/sql"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 const (
@@ -15,9 +15,9 @@ const (
 	dbname = "darshita"
 )
  
-func SetupDB() *sql.DB {
+func SetupDB() *sqlx.DB {
 	dbInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbpass, dbname)
-	db, err := sql.Open("postgres", dbInfo)
+	db, err := sqlx.Open("postgres", dbInfo)
 	additionalFunc.CheckErr(err)
 	return db
 }

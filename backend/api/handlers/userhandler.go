@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"backend/business/services/user"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -10,12 +11,16 @@ import (
 type userHandler struct{
 	user user.Userstruct
 }
+
 func (h userHandler) GetData(c echo.Context) error {
+	fmt.Println("inside getdata")
 	params := c.Param("id")
 	response := h.user.GetUserData(params)
+
 	if len(response.Data) == 0 {
 		return c.JSON(http.StatusBadRequest, response)
 	}
+	
 	return c.JSON(http.StatusOK,response)
 }
 
